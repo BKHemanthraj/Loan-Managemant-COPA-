@@ -1,0 +1,135 @@
+<mvc:View controllerName="copa.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+    <Page title="Contract Wizard">
+        <Wizard id="MainWizard" showNextButton="false">
+            <WizardStep id="Step1" title="Step 1: Create Contract Offer">
+                
+                <IconTabBar id="MainTabs" expandable="false" selectedKey="{/nav/mainKey}">
+                    <items>
+                        <IconTabFilter text="Agency Details" key="agency">
+                            <VBox class="sapUiSmallMargin">
+                                <f:SimpleForm editable="true" layout="ResponsiveGridLayout">
+                                    <Label text="Company Code" required="true"/><Input value="{/agency/cc}" valueLiveUpdate="true" />
+                                    <Label text="Product Type" required="true"/><Input value="{/agency/pt}" valueLiveUpdate="true" />
+                                    <Label text="BPartner" required="true"/><Input value="{/agency/bp}" valueLiveUpdate="true" />
+                                </f:SimpleForm>
+                                <Button text="Go to Number Composition" type="Emphasized" press="onPressNext"
+                                        visible="{= ${/agency/cc} !== '' &amp;&amp; ${/agency/pt} !== '' &amp;&amp; ${/agency/bp} !== '' }" />
+                            </VBox>
+                        </IconTabFilter>
+
+                        <IconTabFilter text="Number Composition" key="number">
+                            <VBox class="sapUiSmallMargin">
+                                <f:SimpleForm editable="true" layout="ResponsiveGridLayout">
+                                    <Label text="Loan Indicator"/><Input value="{/num/ind}" valueLiveUpdate="true"/>
+                                    <Label text="Number Range"/><Input value="{/num/rng}" valueLiveUpdate="true"/>
+                                    <Label text="Divider"/><Input value="{/num/div}" valueLiveUpdate="true"/>
+                                    <Label text="Loan Type"/><Input value="{/num/typ}" valueLiveUpdate="true"/>
+                                </f:SimpleForm>
+                                <Button text="Go to Basic Data (Main)" type="Emphasized" press="onPressNext"
+                                        visible="{= ${/num/ind} !== '' &amp;&amp; ${/num/rng} !== '' }" />
+                            </VBox>
+                        </IconTabFilter>
+
+                        <IconTabFilter text="Basic Data (Main)" key="basic">
+                            <IconTabBar headerMode="Inline">
+                                <items>
+                                    <IconTabFilter text="Basic Data">
+                                        <f:SimpleForm editable="true" layout="ResponsiveGridLayout">
+                                            <Label text="Loan Type"/><Input value="{/basic/loanType}" valueLiveUpdate="true"/>
+                                            <Label text="Application Date"/><DatePicker value="{/basic/appDate}"/>
+                                            <Label text="Application Capital"/><Input value="{/basic/appCap}"/>
+                                            <Label text="Approval date"/><DatePicker value="{/basic/aprDate}"/>
+                                            <Label text="Commitment Date"/><DatePicker value="{/basic/comDate}"/>
+                                        </f:SimpleForm>
+                                    </IconTabFilter>
+                                    <IconTabFilter text="Analysis Data">
+                                        <f:SimpleForm editable="true" layout="ResponsiveGridLayout">
+                                            <Label text="Purpose of Loan"/><Input value="{/analysis/purpose}"/>
+                                            <Label text="AR Billing Job"/><Input value="{/analysis/arJob}"/>
+                                        </f:SimpleForm>
+                                    </IconTabFilter>
+                                    <IconTabFilter text="Organization">
+                                        <f:SimpleForm editable="true" layout="ResponsiveGridLayout">
+                                            <Label text="County"/><Input value="{/org/county}"/>
+                                            <Label text="Organiz. District"/><Input value="{/org/orgDist}"/>
+                                            <Label text="Agent District"/><Input value="{/org/agtDist}"/>
+                                        </f:SimpleForm>
+                                    </IconTabFilter>
+                                    <IconTabFilter text="Syndicate/Assignm"><Text text="No fields" class="sapUiSmallMargin"/></IconTabFilter>
+                                    <IconTabFilter text="Ref. Data">
+                                        <f:SimpleForm editable="true" layout="ResponsiveGridLayout">
+                                            <Label text="Primary Industry code"/><Input value="{/ref/indCode}"/>
+                                            <Label text="Legacy number"/><Input value="{/ref/legNum}"/>
+                                            <Label text="Project number"/><Input value="{/ref/prjNum}"/>
+                                        </f:SimpleForm>
+                                    </IconTabFilter>
+                                    <IconTabFilter text="Control"><Text text="No fields" class="sapUiSmallMargin"/></IconTabFilter>
+                                </items>
+                            </IconTabBar>
+                            <Button text="Go to Condition (Main)" type="Emphasized" press="onPressNext" class="sapUiSmallMargin"
+                                    visible="{= ${/basic/loanType} !== '' }"/>
+                        </IconTabFilter>
+
+                        <IconTabFilter text="Condition (Main)" key="condition">
+                            <IconTabBar headerMode="Inline">
+                                <items>
+                                    <IconTabFilter text="Basic Data">
+                                        <Title text="Condition Header" class="sapUiSmallMarginBegin sapUiSmallMarginTop" />
+                                        <f:SimpleForm editable="true" layout="ResponsiveGridLayout">
+                                            <Label text="Commit. Capital"/><Input value="{/cond/cap}" valueLiveUpdate="true"/>
+                                            <Label text="Repayment Type"/><Input value="{/cond/repayType}"/>
+                                            <Label text="Term Start"/><DatePicker value="{/cond/termStart}"/>
+                                            <Label text="Fixed From"/><DatePicker value="{/cond/fixedFrom}"/>
+                                            <Label text="Fixed Until"/><DatePicker value="{/cond/fixedUntil}"/>
+                                            <Label text="Term End"/><DatePicker value="{/cond/termEnd}"/>
+                                            <Label text="Int.Cal.Mt"/><Input value="{/cond/intCal}"/>
+                                        </f:SimpleForm>
+
+                                        <Title text="Condition Line Items" class="sapUiSmallMarginBegin" />
+                                        <Table items="{/cond/items}" class="sapUiSmallMarginBottom">
+                                            <columns>
+                                                <Column width="180px"><Text text="Condition Type" /></Column>
+                                                <Column><Text text="Eff. From" /></Column>
+                                                <Column><Text text="Amount/Percent" /></Column>
+                                                <Column><Text text="Frequency" /></Column>
+                                                <Column><Text text="Due On" /></Column>
+                                            </columns>
+                                            <items>
+                                                <ColumnListItem type="Active" detailPress="onOpenDetail">
+                                                    <cells>
+                                                        <Text text="{name}" />
+                                                        <DatePicker value="{effFrom}" />
+                                                        <Input value="{val}" />
+                                                        <Input value="{freq}" />
+                                                        <DatePicker value="{dueOn}" />
+                                                    </cells>
+                                                </ColumnListItem>
+                                            </items>
+                                        </Table>
+                                    </IconTabFilter>
+
+                                    <IconTabFilter text="Contract/Eff.int.">
+                                        <f:SimpleForm editable="true" layout="ResponsiveGridLayout">
+                                            <Label text="Contract"/><Input value="{/effInt/contract}"/>
+                                            <Label text="Commit. Capital"/><Input value="{/effInt/cap}"/>
+                                            <Label text="Contract On"/><DatePicker value="{/effInt/date}"/>
+                                            <Label text="Amtz Date"/><DatePicker value="{/effInt/amtzDate}"/>
+                                            <Label text="Maturity Date"/><DatePicker value="{/effInt/matDate}"/>
+                                        </f:SimpleForm>
+                                    </IconTabFilter>
+                                </items>
+                            </IconTabBar>
+                            <Button text="Finish and Save" type="Accept" press="onFinish" class="sapUiSmallMargin"
+                                    visible="{= ${/cond/cap} !== '' }"/>
+                        </IconTabFilter>
+                    </items>
+                </IconTabBar>
+
+            </WizardStep>
+        </Wizard>
+    </Page>
+</mvc:View>
